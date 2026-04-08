@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import api from '../api/axios';
+import { useTimer } from '../context/TimerContext';
 
 const COLORS = ['#C8F04D', '#4D7CF0', '#FF4D6D', '#4DFFB4', '#FFB347', '#BF5FFF'];
 
@@ -9,6 +10,7 @@ export default function Projects() {
   const [projects, setProjects] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [form, setForm] = useState({ name: '', client: '', description: '', hourlyRate: '', color: COLORS[0] });
+  const { activeTimer } = useTimer();
   const nav = useNavigate();
 
   const load = () => api.get('/projects').then(r => setProjects(r.data));
@@ -37,19 +39,29 @@ export default function Projects() {
           {projects.map(p => (
             <div key={p._id} onClick={() => nav(`/projects/${p._id}`)}
               style={{
-                background: 'var(--surface)', border: '1px solid var(--border)',
+                background: 'var(--surface)', border: activeTimer?.projectId === p._id ? '2px solid var(--accent)' : '1px solid var(--border)',
                 borderRadius: 20, padding: '28px 28px', cursor: 'pointer',
-                transition: 'all 0.25s', position: 'relative', overflow: 'hidden'
+                transition: 'all 0.25s', position: 'relative', overflow: 'hidden',
+                boxShadow: activeTimer?.projectId === p._id ? '0 0 20px rgba(200,240,77,0.2)' : 'none'
               }}
               onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.borderColor = p.color; }}
-              onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.borderColor = 'var(--border)'; }}
+              onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.borderColor = activeTimer?.projectId === p._id ? 'var(--accent)' : 'var(--border)'; }}
             >
               <div style={{
                 position: 'absolute', top: 0, left: 0, right: 0, height: 4,
                 background: p.color || 'var(--accent)'
               }} />
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
-                <h3 style={{ fontFamily: 'var(--font-head)', fontSize: '1.2rem', fontWeight: 700 }}>{p.name}</h3>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <h3 style={{ fontFamily: 'var(--font-head)', fontSize: '1.2rem', fontWeight: 700 }}>{p.name}</h3>
+                  {activeTimer?.projectId === p._id && (
+                    <span style={{
+                      background: 'rgba(200,240,77,0.2)', color: 'var(--accent)',
+                      padding: '4px 8px', borderRadius: 4, fontSize: '0.7rem', fontWeight: 700,
+                      animation: 'pulse 2s infinite'
+                    }}>🔴 TIMER</span>
+                  )}
+                </div>
                 <span style={{
                   background: p.status === 'active' ? 'rgba(77,255,180,0.1)' : 'rgba(107,110,133,0.15)',
                   color: p.status === 'active' ? 'var(--success)' : 'var(--muted)',

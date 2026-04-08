@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { TimerProvider } from './context/TimerContext';
 import PageWrapper from './components/PageWrapper';
 import Landing from './pages/Landing';
 import Login from './pages/Login';
@@ -38,9 +39,11 @@ export default function App() {
 
   return (
     <AuthProvider>
-      <BrowserRouter>
-        <LocationRoutes />
-      </BrowserRouter>
+      <TimerProvider>
+        <BrowserRouter>
+          <LocationRoutes />
+        </BrowserRouter>
+      </TimerProvider>
     </AuthProvider>
   );
 }

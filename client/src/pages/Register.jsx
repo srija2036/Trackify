@@ -5,6 +5,8 @@ import { useAuth } from '../context/AuthContext';
 
 export default function Register() {
   const [form, setForm] = useState({ username: '', email: '', password: '', confirm: '' });
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
   const [error, setError] = useState('');
   const { login } = useAuth();
   const nav = useNavigate();
@@ -35,18 +37,52 @@ export default function Register() {
         {error && <p style={{ color: 'var(--danger)', marginBottom: 16 }}>{error}</p>}
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-          {[
-            { label: 'USERNAME', key: 'username', type: 'text', placeholder: 'johndoe' },
-            { label: 'EMAIL', key: 'email', type: 'email', placeholder: 'you@example.com' },
-            { label: 'PASSWORD', key: 'password', type: 'password', placeholder: '••••••••' },
-            { label: 'CONFIRM PASSWORD', key: 'confirm', type: 'password', placeholder: '••••••••' },
-          ].map(f => (
-            <div key={f.key}>
-              <label style={{ fontSize: '0.8rem', color: 'var(--muted)', display: 'block', marginBottom: 6 }}>{f.label}</label>
-              <input type={f.type} placeholder={f.placeholder}
-                value={form[f.key]} onChange={e => setForm({ ...form, [f.key]: e.target.value })} />
+          <div>
+            <label style={{ fontSize: '0.8rem', color: 'var(--muted)', display: 'block', marginBottom: 6 }}>USERNAME</label>
+            <input type="text" placeholder="johndoe"
+              value={form.username} onChange={e => setForm({ ...form, username: e.target.value })} />
+          </div>
+          <div>
+            <label style={{ fontSize: '0.8rem', color: 'var(--muted)', display: 'block', marginBottom: 6 }}>EMAIL</label>
+            <input type="email" placeholder="you@example.com"
+              value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} />
+          </div>
+          <div>
+            <label style={{ fontSize: '0.8rem', color: 'var(--muted)', display: 'block', marginBottom: 6 }}>PASSWORD</label>
+            <div style={{ position: 'relative' }}>
+              <input type={showPassword ? 'text' : 'password'} placeholder="••••••••"
+                value={form.password} onChange={e => setForm({ ...form, password: e.target.value })} />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                style={{
+                  position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)',
+                  background: 'none', border: 'none', cursor: 'pointer', color: 'var(--muted)',
+                  fontSize: '1.1rem', padding: 0, display: 'flex', alignItems: 'center'
+                }}
+              >
+                {showPassword ? '👁️' : '👁️‍🗨️'}
+              </button>
             </div>
-          ))}
+          </div>
+          <div>
+            <label style={{ fontSize: '0.8rem', color: 'var(--muted)', display: 'block', marginBottom: 6 }}>CONFIRM PASSWORD</label>
+            <div style={{ position: 'relative' }}>
+              <input type={showConfirm ? 'text' : 'password'} placeholder="••••••••"
+                value={form.confirm} onChange={e => setForm({ ...form, confirm: e.target.value })} />
+              <button
+                type="button"
+                onClick={() => setShowConfirm(!showConfirm)}
+                style={{
+                  position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)',
+                  background: 'none', border: 'none', cursor: 'pointer', color: 'var(--muted)',
+                  fontSize: '1.1rem', padding: 0, display: 'flex', alignItems: 'center'
+                }}
+              >
+                {showConfirm ? '👁️' : '👁️‍🗨️'}
+              </button>
+            </div>
+          </div>
           <button className="btn-primary" style={{ marginTop: 8, width: '100%', padding: '14px' }}
             onClick={handleSubmit}>
             Create Account →

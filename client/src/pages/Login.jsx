@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 
 export default function Login() {
   const [form, setForm] = useState({ email: '', password: '' });
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const { login } = useAuth();
   const nav = useNavigate();
@@ -41,8 +42,21 @@ export default function Login() {
           </div>
           <div>
             <label style={{ fontSize: '0.8rem', color: 'var(--muted)', display: 'block', marginBottom: 6 }}>PASSWORD</label>
-            <input type="password" placeholder="••••••••"
-              value={form.password} onChange={e => setForm({ ...form, password: e.target.value })} />
+            <div style={{ position: 'relative' }}>
+              <input type={showPassword ? 'text' : 'password'} placeholder="••••••••"
+                value={form.password} onChange={e => setForm({ ...form, password: e.target.value })} />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                style={{
+                  position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)',
+                  background: 'none', border: 'none', cursor: 'pointer', color: 'var(--muted)',
+                  fontSize: '1.1rem', padding: 0, display: 'flex', alignItems: 'center'
+                }}
+              >
+                {showPassword ? '👁️' : '👁️‍🗨️'}
+              </button>
+            </div>
           </div>
           <div style={{ textAlign: 'right' }}>
             <Link to="/forgot" style={{ color: 'var(--accent)', fontSize: '0.9rem', textDecoration: 'none' }}>Forgot Password?</Link>
